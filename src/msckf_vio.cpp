@@ -644,6 +644,7 @@ void MsckfVio::predictNewState(const double& dt,
   Vector3d& p = state_server.imu_state.position;
 
   // Some pre-calculation
+  ///可能是龙格库塔法的中间变量
   Vector4d dq_dt, dq_dt2;
   if (gyro_norm > 1e-5) {
     dq_dt = (cos(gyro_norm*dt*0.5)*Matrix4d::Identity() +
@@ -684,7 +685,7 @@ void MsckfVio::predictNewState(const double& dt,
   Vector3d k4_p_dot = k3_v;
 
   // yn+1 = yn + dt/6*(k1+2*k2+2*k3+k4)
-  q = dq_dt;
+  q = dq_dt;///这里应该是计算的当前imu相对于上一帧imu的增量
   quaternionNormalize(q);
   v = v + dt/6*(k1_v_dot+2*k2_v_dot+2*k3_v_dot+k4_v_dot);
   p = p + dt/6*(k1_p_dot+2*k2_p_dot+2*k3_p_dot+k4_p_dot);
