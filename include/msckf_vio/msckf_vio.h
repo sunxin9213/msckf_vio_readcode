@@ -72,7 +72,7 @@ class MsckfVio {
       CamStateServer cam_states;
 
       // State covariance matrix
-      Eigen::MatrixXd state_cov;
+      Eigen::MatrixXd state_cov;///21维的
       Eigen::Matrix<double, 12, 12> continuous_noise_cov;
     };
 

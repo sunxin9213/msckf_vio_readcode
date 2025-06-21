@@ -185,12 +185,12 @@ bool MsckfVio::createRosIO() {
       &MsckfVio::resetCallback, this);
 
   imu_sub = nh.subscribe("imu", 100,
-      &MsckfVio::imuCallback, this);
+      &MsckfVio::imuCallback, this);///简单初始化了一下imu的bias
   feature_sub = nh.subscribe("features", 40,
       &MsckfVio::featureCallback, this);
 
   mocap_odom_sub = nh.subscribe("mocap_odom", 10,
-      &MsckfVio::mocapOdomCallback, this);
+      &MsckfVio::mocapOdomCallback, this);///引入其他传感器的时候在这里
   mocap_odom_pub = nh.advertise<nav_msgs::Odometry>("gt_odom", 1);
 
   return true;
@@ -511,11 +511,11 @@ void MsckfVio::batchImuProcessing(const double& time_bound) {
 
   for (const auto& imu_msg : imu_msg_buffer) {
     double imu_time = imu_msg.header.stamp.toSec();
-    if (imu_time < state_server.imu_state.time) {
+    if (imu_time < state_server.imu_state.time) {///state_server.imu_state.time这个时间是当前imu前一帧相机的时间
       ++used_imu_msg_cntr;
       continue;
     }
-    if (imu_time > time_bound) break;
+    if (imu_time > time_bound) break;///time_bound是当前imu后一帧相机的时间
 
     // Convert the msgs.
     Vector3d m_gyro, m_acc;
@@ -542,7 +542,7 @@ void MsckfVio::processModel(const double& time,
     const Vector3d& m_acc) {
 
   // Remove the bias from the measured gyro and acceleration
-  IMUState& imu_state = state_server.imu_state;
+  IMUState& imu_state = state_server.imu_state;///上一帧imu的数据？？？
   Vector3d gyro = m_gyro - imu_state.gyro_bias;
   Vector3d acc = m_acc - imu_state.acc_bias;
   double dtime = time - imu_state.time;

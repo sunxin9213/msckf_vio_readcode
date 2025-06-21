@@ -61,7 +61,7 @@ struct IMUState {
   // `velocity`. There three variables are used to modify
   // the transition matrices to make the observability matrix
   // have proper null space.
-  Eigen::Vector4d orientation_null;
+  Eigen::Vector4d orientation_null;///零空间转换了
   Eigen::Vector3d position_null;
   Eigen::Vector3d velocity_null;
 
